@@ -19,15 +19,6 @@ import androidx.test.espresso.ViewInteraction;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
-import org.hamcrest.core.IsInstanceOf;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,95 +26,35 @@ import org.junit.runner.RunWith;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
-import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.is;
 
-/**
- * Recorded Espresso test that tests the score plus and minus buttons
- * and results for Team 1.
- */
+
 @RunWith(AndroidJUnit4.class)
 public class ScorePlusMinusTest {
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityTestRule
+    public ActivityTestRule<MainActivity> activityTestRule
             = new ActivityTestRule<>(MainActivity.class);
 
     /**
      * Tests the score plus and minus buttons.
      */
     @Test
-    public void scorePlusMinusTest() {
-        ViewInteraction appCompatImageButton = onView(
-                allOf(withId(R.id.increaseTeam1),
-                        withContentDescription("Plus Button"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        0),
-                                3),
-                        isDisplayed()));
+    public void scorePlusMinusTest() throws InterruptedException {
+        ViewInteraction appCompatImageButton = onView(withId(R.id.increaseTeam1));
         appCompatImageButton.perform(click());
+        Thread.sleep(1000);
 
-        ViewInteraction textView = onView(
-                allOf(withId(R.id.score_1), withText("1"),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf
-                                                .<View>instanceOf(android.widget.LinearLayout.class),
-                                        0),
-                                2),
-                        isDisplayed()));
+        ViewInteraction textView = onView(withId(R.id.score_1));
         textView.check(matches(withText("1")));
+        Thread.sleep(1000);
 
-        ViewInteraction appCompatImageButton2 = onView(
-                allOf(withId(R.id.decreaseTeam1),
-                        withContentDescription("Minus Button"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        0),
-                                1),
-                        isDisplayed()));
+        ViewInteraction appCompatImageButton2 = onView(withId(R.id.decreaseTeam1));
         appCompatImageButton2.perform(click());
 
-        ViewInteraction textView2 = onView(
-                allOf(withId(R.id.score_1), withText("0"),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf
-                                                .<View>instanceOf(android.widget.LinearLayout.class),
-                                        0),
-                                2),
-                        isDisplayed()));
+        ViewInteraction textView2 = onView(withId(R.id.score_1));
         textView2.check(matches(withText("0")));
-
-    }
-
-    private static Matcher<View> childAtPosition(
-            final Matcher<View> parentMatcher, final int position) {
-
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Child at position "
-                        + position + " in parent ");
-                parentMatcher.describeTo(description);
-            }
-
-            @Override
-            public boolean matchesSafely(View view) {
-                ViewParent parent = view.getParent();
-                return parent instanceof ViewGroup
-                        && parentMatcher.matches(parent)
-                        && view.equals(((ViewGroup) parent)
-                        .getChildAt(position));
-            }
-        };
+        Thread.sleep(2000);
     }
 }

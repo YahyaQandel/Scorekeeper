@@ -43,72 +43,57 @@ import static org.junit.Assert.assertThat;
 @SdkSuppress(minSdkVersion = 18)
 public class ScorePlusMinusUIAutomatorTest {
 
-    private static final String BASIC_SAMPLE_PACKAGE = "com.example.android.scorekeeper";
+    private static final String SCORE_KEEPER_PACKAGE = "com.example.android.scorekeeper";
 
     private static final int LAUNCH_TIMEOUT = 5000;
 
     private static final String STRING_TO_BE_TYPED = "UiAutomator";
 
-    private UiDevice mDevice;
+    private UiDevice device;
 
 
     @Before
     public void startMainActivityFromHomeScreen() {
         // Initialize UiDevice instance
-        mDevice = UiDevice.getInstance(getInstrumentation());
+        device = UiDevice.getInstance(getInstrumentation());
 
         // Start from the home screen
-        mDevice.pressHome();
+        device.pressHome();
 
         // Wait for launcher
         final String launcherPackage = getLauncherPackageName();
         assertThat(launcherPackage, notNullValue());
-        mDevice.wait(Until.hasObject(By.pkg(launcherPackage).depth(0)), LAUNCH_TIMEOUT);
+        device.wait(Until.hasObject(By.pkg(launcherPackage).depth(0)), LAUNCH_TIMEOUT);
 
         // Launch the blueprint app
         Context context = getApplicationContext();
         final Intent intent = context.getPackageManager()
-                .getLaunchIntentForPackage(BASIC_SAMPLE_PACKAGE);
+                .getLaunchIntentForPackage(SCORE_KEEPER_PACKAGE);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);    // Clear out any previous instances
         context.startActivity(intent);
 
         // Wait for the app to appear
-        mDevice.wait(Until.hasObject(By.pkg(BASIC_SAMPLE_PACKAGE).depth(0)), LAUNCH_TIMEOUT);
+        device.wait(Until.hasObject(By.pkg(SCORE_KEEPER_PACKAGE).depth(0)), LAUNCH_TIMEOUT);
     }
 
 
 
     @Test
     public void checkPreconditions() {
-        assertThat(mDevice, notNullValue());
+        assertThat(device, notNullValue());
     }
 
     @Test
-    public void testChangeText_sameActivity() {
+    public void testPlusAndMinus() {
         // Type text and then press the button.
-        mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "editTextUserInput"))
+        device.findObject(By.res(SCORE_KEEPER_PACKAGE, "editTextUserInput"))
                 .setText(STRING_TO_BE_TYPED);
-        mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "changeTextBt"))
+        device.findObject(By.res(SCORE_KEEPER_PACKAGE, "changeTextBt"))
                 .click();
 
         // Verify the test is displayed in the Ui
-        UiObject2 changedText = mDevice
-                .wait(Until.findObject(By.res(BASIC_SAMPLE_PACKAGE, "textToBeChanged")),
-                        500 /* wait 500ms */);
-        assertThat(changedText.getText(), is(equalTo(STRING_TO_BE_TYPED)));
-    }
-
-    @Test
-    public void testChangeText_newActivity() {
-        // Type text and then press the button.
-        mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "editTextUserInput"))
-                .setText(STRING_TO_BE_TYPED);
-        mDevice.findObject(By.res(BASIC_SAMPLE_PACKAGE, "activityChangeTextBtn"))
-                .click();
-
-        // Verify the test is displayed in the Ui
-        UiObject2 changedText = mDevice
-                .wait(Until.findObject(By.res(BASIC_SAMPLE_PACKAGE, "show_text_view")),
+        UiObject2 changedText = device
+                .wait(Until.findObject(By.res(SCORE_KEEPER_PACKAGE, "textToBeChanged")),
                         500 /* wait 500ms */);
         assertThat(changedText.getText(), is(equalTo(STRING_TO_BE_TYPED)));
     }
