@@ -30,6 +30,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 
+
 @RunWith(AndroidJUnit4.class)
 public class ScorePlusMinusTest {
 
@@ -41,20 +42,32 @@ public class ScorePlusMinusTest {
      * Tests the score plus and minus buttons.
      */
     @Test
-    public void scorePlusMinusTest() throws InterruptedException {
+    public void scorePlusMinusTest() {
         ViewInteraction appCompatImageButton = onView(withId(R.id.increaseTeam1));
         appCompatImageButton.perform(click());
-        Thread.sleep(1000);
 
         ViewInteraction textView = onView(withId(R.id.score_1));
         textView.check(matches(withText("1")));
-        Thread.sleep(1000);
 
         ViewInteraction appCompatImageButton2 = onView(withId(R.id.decreaseTeam1));
         appCompatImageButton2.perform(click());
 
         ViewInteraction textView2 = onView(withId(R.id.score_1));
         textView2.check(matches(withText("0")));
-        Thread.sleep(2000);
     }
+
+
+    @Test
+    public void testMinusShouldNotResultNegative() {
+        ViewInteraction textView = onView(withId(R.id.score_1));
+        textView.check(matches(withText("0")));
+
+        ViewInteraction appCompatImageButton2 = onView(withId(R.id.decreaseTeam1));
+        appCompatImageButton2.perform(click());
+
+        ViewInteraction textView2 = onView(withId(R.id.score_1));
+        textView2.check(matches(withText("0")));
+    }
+
+
 }

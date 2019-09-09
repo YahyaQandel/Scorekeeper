@@ -75,12 +75,18 @@ public class MainActivity extends AppCompatActivity {
         switch (viewID) {
             // If it was on Team 1:
             case R.id.decreaseTeam1:
+                if (mScore1 <= 0) {
+                    return;
+                }
                 // Decrement the score and update the TextView.
                 mScore1--;
                 mScoreText1.setText(String.valueOf(mScore1));
                 break;
             // If it was Team 2:
             case R.id.decreaseTeam2:
+                if (mScore2 <= 0) {
+                    return;
+                }
                 // Decrement the score and update the TextView.
                 mScore2--;
                 mScoreText2.setText(String.valueOf(mScore2));

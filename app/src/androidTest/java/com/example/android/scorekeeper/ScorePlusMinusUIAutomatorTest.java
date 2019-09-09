@@ -47,8 +47,6 @@ public class ScorePlusMinusUIAutomatorTest {
 
     private static final int LAUNCH_TIMEOUT = 5000;
 
-    private static final String STRING_TO_BE_TYPED = "UiAutomator";
-
     private UiDevice device;
 
 
@@ -85,17 +83,36 @@ public class ScorePlusMinusUIAutomatorTest {
 
     @Test
     public void testPlusAndMinus() {
-        // Type text and then press the button.
-        device.findObject(By.res(SCORE_KEEPER_PACKAGE, "editTextUserInput"))
-                .setText(STRING_TO_BE_TYPED);
-        device.findObject(By.res(SCORE_KEEPER_PACKAGE, "changeTextBt"))
-                .click();
+        // click plus button for the first team
+        device.findObject(By.res(SCORE_KEEPER_PACKAGE, "increaseTeam1")).click();
 
-        // Verify the test is displayed in the Ui
-        UiObject2 changedText = device
-                .wait(Until.findObject(By.res(SCORE_KEEPER_PACKAGE, "textToBeChanged")),
+        // Verify the result for the team is updated
+        UiObject2 firstTeamResult = device
+                .wait(Until.findObject(By.res(SCORE_KEEPER_PACKAGE, "score_1")),
                         500 /* wait 500ms */);
-        assertThat(changedText.getText(), is(equalTo(STRING_TO_BE_TYPED)));
+        assertThat(firstTeamResult.getText(), is(equalTo("1")));
+
+
+        // click minus button for the first team
+        device.findObject(By.res(SCORE_KEEPER_PACKAGE, "decreaseTeam1")).click();
+
+        assertThat(firstTeamResult.getText(), is(equalTo("0")));
+    }
+
+
+    @Test
+    public void testMinusShouldNotResultNegative() {
+        // Verify the result for the team is zero
+        UiObject2 decreasedText = device
+                .wait(Until.findObject(By.res(SCORE_KEEPER_PACKAGE, "score_1")),
+                        500 /* wait 500ms */);
+        assertThat(decreasedText.getText(), is(equalTo("0")));
+
+
+        // click minus button for the first team
+        device.findObject(By.res(SCORE_KEEPER_PACKAGE, "decreaseTeam1")).click();
+
+        assertThat(decreasedText.getText(), is(equalTo("0")));
     }
 
 
